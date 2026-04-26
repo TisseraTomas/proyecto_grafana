@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB_SOA
+    type: influxdb
+    uid: bfhay1m297a4gf
+    access: proxy
+    url: http://bfts2026.mooo.com:8086/  # URL de InfluxDB
+    jsonData:
+      version: Flux
+      organization: universidad          
+      defaultBucket: metricas_host       
+    secureJsonData:
+      token: ${INFLUXDB_TOKEN}           
+    editable: true
