@@ -5,11 +5,12 @@ datasources:
     type: influxdb
     uid: bfhay1m297a4gf
     access: proxy
-    url: http://bfts2026.mooo.com:8086/  # URL de InfluxDB
+    url: https://bfts2026.mooo.com:8086/  # URL de InfluxDB
     jsonData:
       version: Flux
       organization: universidad          
-      defaultBucket: metricas_host       
+      defaultBucket: metricas_host
+      tlsSkipVerify: true       
     secureJsonData:
-      token: ${INFLUXDB_TOKEN}           
+      token: ${INFLUX_TOKEN}           
     editable: true

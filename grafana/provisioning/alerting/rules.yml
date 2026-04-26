@@ -10,6 +10,14 @@ contactPoints:
             addresses: tfunes744@alumnos.iua.edu.ar
             singleEmail: false
           disableResolveMessage: false
+    - orgId: 1
+      name: 'mail tizi'
+      receivers:
+        - uid: bfhe10494tszke
+          type: email
+          settings:
+            addresses: bertorellotiziano@gmail.com
+          disableResolveMessage: false
 # 2. EL ALERTMANAGER (Notification Policies / El Enrutador)
 policies:
   - orgId: 1
@@ -196,181 +204,6 @@ groups:
           isPaused: false
           notification_settings:
             receiver: Mail DB InfluxDB
-apiVersion: 1
-groups:
-    - orgId: 1
-      name: system-metrics
-      folder: Monitoring
-      interval: 1m
-      rules:
-        - uid: ffhel37vazp4we
-          title: CPU ALTA
-          condition: C
-          data:
-            - refId: A
-              relativeTimeRange:
-                from: 600
-                to: 0
-              datasourceUid: bfhay1m297a4gf
-              model:
-                intervalMs: 1000
-                maxDataPoints: 43200
-                query: |-
-                    from(bucket: "metricas_host")
-                      |> range(start: -10m)
-                      |> filter(fn: (r) => r["_measurement"] == "cpu")
-                      |> filter(fn: (r) => r["_field"] == "usage_idle")
-                      |> aggregateWindow(every: 1m, fn: mean)
-                      |> map(fn: (r) => ({ r with _value: 100.0 - r._value }))
-                      |> yield(name: "cpu_usage")
-                refId: A
-            - refId: B
-              datasourceUid: __expr__
-              model:
-                conditions:
-                    - evaluator:
-                        params: []
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params: []
-                      reducer:
-                        params: []
-                        type: last
-                      type: query
-                datasource:
-                    type: __expr__
-                    uid: __expr__
-                expression: A
-                intervalMs: 1000
-                maxDataPoints: 43200
-                reducer: last
-                refId: B
-                type: reduce
-            - refId: C
-              datasourceUid: __expr__
-              model:
-                conditions:
-                    - evaluator:
-                        params:
-                            - 80
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params: []
-                      reducer:
-                        params: []
-                        type: last
-                      type: query
-                datasource:
-                    type: __expr__
-                    uid: __expr__
-                expression: B
-                intervalMs: 1000
-                maxDataPoints: 43200
-                refId: C
-                type: threshold
-          noDataState: NoData
-          execErrState: Error
-          keepFiringFor: 2m
-          annotations:
-            description: |-
-                El uso de la CPU superó el 80 % durante más de 5 minutos.
-                Esto podría indicar una carga elevada del sistema o problemas de rendimiento.
-            summary: uso de cpu arriba del 80% durante 5 minutos
-          labels:
-            severity: warning
-          isPaused: false
-          notification_settings:
-            receiver: Mail DB InfluxDB
-        - uid: ffhlhqw1q8sg0e
-          title: Alerta Disco Alto
-          condition: C
-          data:
-            - refId: A
-              relativeTimeRange:
-                from: 600
-                to: 0
-              datasourceUid: bfhay1m297a4gf
-              model:
-                intervalMs: 1000
-                maxDataPoints: 43200
-                query: |-
-                    from(bucket: "metricas_host")
-                      |> range(start: -10m)
-                      |> filter(fn: (r) => r["_measurement"] == "disk")
-                      |> filter(fn: (r) => r["_field"] == "used_percent")
-                      |> aggregateWindow(every: 1m, fn: mean)
-                      |> yield(name: "disk_usage")
-                refId: A
-            - refId: B
-              datasourceUid: __expr__
-              model:
-                conditions:
-                    - evaluator:
-                        params: []
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params: []
-                      reducer:
-                        params: []
-                        type: last
-                      type: query
-                datasource:
-                    type: __expr__
-                    uid: __expr__
-                expression: A
-                intervalMs: 1000
-                maxDataPoints: 43200
-                reducer: last
-                refId: B
-                type: reduce
-            - refId: C
-              datasourceUid: __expr__
-              model:
-                conditions:
-                    - evaluator:
-                        params:
-                            - 80
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params: []
-                      reducer:
-                        params: []
-                        type: last
-                      type: query
-                datasource:
-                    type: __expr__
-                    uid: __expr__
-                expression: B
-                intervalMs: 1000
-                maxDataPoints: 43200
-                refId: C
-                type: threshold
-          noDataState: NoData
-          execErrState: Error
-          keepFiringFor: 2m
-          annotations:
-            description: El uso del disco se excedio de 80% durante mas de 5 minutos
-            summary: Uso de disco sobre 80%
-          labels:
-            severity: warning
-          isPaused: false
-          notification_settings:
-            receiver: Mail DB InfluxDB
-apiVersion: 1
-groups:
-    - orgId: 1
-      name: system-metrics
-      folder: Monitoring
-      interval: 1m
-      rules:
         - uid: afhlhhgdnt340b
           title: Memoria Alta
           condition: C
