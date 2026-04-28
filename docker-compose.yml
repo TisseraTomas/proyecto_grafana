@@ -5,6 +5,10 @@ services:
     env_file:
       - .env
     environment:
+    environment:
+      - GF_SERVER_DOMAIN=${DOMAIN}
+      - GF_SERVER_ROOT_URL=${ROOT_URL}
+      
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
 
